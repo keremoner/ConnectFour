@@ -3,6 +3,9 @@ const http = require("http");
 const websocket = require("ws");
 const messages = require("./public/javascripts/messages");
 
+const Game = require("./game");
+const gameStats = require("./stats");
+
 //Checking the arguments
 if (process.argv.length < 3) {
   console.log("Usage: node app.js <port>");
@@ -24,6 +27,28 @@ const wss = new websocket.Server({ server });
 app.get("/", function(req, res){
   res.sendFile("splash.html", { root: "./public" });
 })
+
+
+const websockets = {};
+//Deleting finished games from the websockets
+setInterval(function() {
+
+    for(let i in websockets){
+        if(Object.prototype.hasOwnProperty.call(websockets, i)){
+            let gameObj = websockets[i];
+            if(gameObj.isFinished()){
+                console.log("Deleting websocket ID: " + i);
+                delete websockets[i];
+            }
+        }
+    }
+
+}, 5000);
+
+//Creating the first game
+let currentGame = new Game(gameStats.gamesInitialized);
+let connectionID = 0;
+
 
 //Setting what to do when ws connection is on
 wss.on("connection", function(ws){

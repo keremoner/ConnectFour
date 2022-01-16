@@ -139,13 +139,6 @@ function Disc(player){
     if(currentCol>6){currentCol=6;}
     document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
   }
-  document.onload = function(evt){
-    if(currentPlayer == 1){
-    currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/60);
-    if(currentCol<0){currentCol=0;}
-    if(currentCol>6){currentCol=6;}
-    document.getElementById('d'+$this.id).style.left = (5+5.69*currentCol)+"vw";
-    }
   }
   document.onclick = function(evt){
     if(currentPlayer == 1){

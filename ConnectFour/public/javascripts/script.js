@@ -104,7 +104,9 @@ function Disc(player){
   
   function checkForMoveVictory(){
     if(!checkForVictory(currentRow,currentCol)){ //if the player couldn't win
-      yourTurn =false;                           //disable the user inputs
+      yourTurn =!yourTurn;                       //enable/disable the user inputs
+      currentPlayer = 3-currentPlayer;
+      placeDisc(currentPlayer);
     } else {
       var ww = currentPlayer == 1 ? 'Player1' : 'Player2';
       alert(ww+" win!");

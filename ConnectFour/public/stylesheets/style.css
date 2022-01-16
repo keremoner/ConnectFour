@@ -61,6 +61,13 @@ img{
     animation-fill-mode: forwards;
     
 }
+h1{
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 4vw;
+    z-index: -1;
+    margin-bottom: 0px;
+}
 h1.menu{
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -113,19 +120,22 @@ h1.menu:hover::before {
 
 
 /* Game HTML*/
-.scoreBoard{
+.status{
     float: left;
-    width:100px;
+    width:auto;
     margin-top: 5%;
     margin-left: 0.5%;
     margin-right: auto;
-
+    z-index:-1;
+    font-size: 2vw;
+    color: royalblue;
 }
+
 h2.scoreh2{
     font-size: 30px;
 }
 .gameBoard{
-    margin-top:10vh;
+    margin-top:5vh;
     margin-right: auto;
     margin-left: auto;
     width: 40vw;
@@ -150,6 +160,7 @@ img.board{
     position: absolute;
 }
 img.backoftheboard{
+    opacity: 0.95;
     margin-top: 5vw;
     z-index: -1;
     position: absolute;

@@ -36,19 +36,17 @@ const wss = new websocket.Server({ server });
 
 const websockets = {};
 //Deleting finished games from the websockets
-// setInterval(function() {
-
-//     for(let i in websockets){
-//         if(Object.prototype.hasOwnProperty.call(websockets, i)){
-//             let gameObj = websockets[i];
-//             if(gameObj.isFinished()){
-//                 console.log("Deleting websocket ID: " + i);
-//                 delete websockets[i];
-//             }
-//         }
-//     }
-
-// }, 5000);
+setInterval(function() {
+  for (let i in websockets) {
+    if (Object.prototype.hasOwnProperty.call(websockets,i)) {
+      let gameObj = websockets[i];
+      //if the gameObj has a final status, the game is complete/aborted
+      if (gameObj.finalStatus != null) {
+        delete websockets[i];
+      }
+    }
+  }
+}, 50000);
 
 //Creating the first game
 let currentGame = new Game(gameStats.gamesInitialized);
@@ -88,10 +86,12 @@ wss.on("connection", function(ws){
     const gameObj = websockets[con["id"]];
     const isPlayerA = gameObj.playerA == con ? true : false;
 
-    if (oMsg.type == messages.T_GAME_OVER && gameObj.gameState) {
+
+    if (oMsg.type == messages.T_GAME_OVER && gameObj.gameState == "PLAYING") {
       gameObj.setStatus(oMsg.data);
       gameStats.gamesCompleted++;
   }
+  console.log(oMsg.type + " " + gameObj.gameState);
 
     if (isPlayerA) {
       /*
@@ -108,9 +108,9 @@ wss.on("connection", function(ws){
        */
       if (oMsg.type == messages.T_NEXT_MOVE) {
         gameObj.playerA.send(message.toString());
-        gameObj.setStatus("CHAR GUESSED");
       }
     }
+    gameObj.setStatus("PLAYING");
   });
   con.on("close", function(code) {
     /*
@@ -124,31 +124,37 @@ wss.on("connection", function(ws){
        * if possible, abort the game; if not, the game is already completed
        */
       const gameObj = websockets[con["id"]];
-
-      if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
-        gameObj.setStatus("ABORTED");
-        gameStats.gamesAborted++;
-
-        /*
-         * determine whose connection remains open;
-         * close it
-         */
-        try {
-          gameObj.playerA.send(messages.S_GAME_ABORTED);
-          gameObj.playerA.close();
-          gameObj.playerA = null;
-        } catch (e) {
-          console.log("Player A closing: " + e);
-        }
-
-        try {
-          gameObj.playerB.send(messages.S_GAME_ABORTED);
-          gameObj.playerB.close();
-          gameObj.playerB = null;
-        } catch (e) {
-          console.log("Player B closing: " + e);
+      if(gameObj.gameState == "1 JOINT"){
+        gameObj.setStatus("0 JOINT");
+        gameObj.playerA = null;
+      }else{
+        if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
+          gameObj.setStatus("ABORTED");
+          gameStats.gamesAborted++;
+  
+          /*
+           * determine whose connection remains open;
+           * close it
+           */
+          try {
+            gameObj.playerA.send(messages.S_GAME_ABORTED);
+            gameObj.playerA.close();
+            gameObj.playerA = null;
+          } catch (e) {
+            console.log("Player A closing: " + e);
+          }
+  
+          try {
+            gameObj.playerB.send(messages.S_GAME_ABORTED);
+            gameObj.playerB.close();
+            gameObj.playerB = null;
+          } catch (e) {
+            console.log("Player B closing: " + e);
+          }
         }
       }
+
+
     }
   });
 

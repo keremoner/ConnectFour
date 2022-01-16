@@ -48,12 +48,11 @@ socket.onmessage = function (event){
 
   }
 
-  // //When the game is aborted
-  // else if(msg.type == Messages.O_GAME_ABORTED.type){
-  //     statusField.innerHTML = "Game is aborted. Refresh the page if you want to join a new lobby.";
-  //     nextMoveButton.disabled = true;
-  //     nextMoveField.disabled = true;
-  // }
+  //When the game is aborted
+  else if(msg.type == Messages.O_GAME_ABORTED.type){
+      statusField.innerHTML = "Game is aborted. Refresh the page if you want to join a new lobby.";
+      gameState.yourTurn = false;
+  }
 
   //When the opponent sends its move
   else if(msg.type == Messages.T_NEXT_MOVE){
@@ -68,6 +67,7 @@ socket.onmessage = function (event){
       statusField.innerHTML = "The game is on<br>Your turn";
 
       dropDisc(oppDisk.id, 3 - gameState.player);
+      checkForMoveVictory();
       if(!checkForVictory(gameState.currentRow, gameState.currentCol)){
         placeDisc(gameState.player);
       }
@@ -161,9 +161,10 @@ function Disc(player){
         let msg = Messages.O_NEXT_MOVE;
         msg.data = gameState.currentCol;
         socket.send(JSON.stringify(msg));
+        statusField.innerHTML = "The game is on<br>Opponent's turn";
         dropDisc($this.id,$this.player);
         gameState.yourTurn = false;
-        statusField.innerHTML = "The game is on<br>Opponent's turn";
+
     }
 }
   //drop function to move the checker image and check if it results in a win condition
@@ -179,10 +180,22 @@ function Disc(player){
   function checkForMoveVictory(){
 
     if(checkForVictory(gameState.currentRow, gameState.currentCol)){
-      var ww = gameState.currentPlayer == 1 ? 'Player1' : 'Player2';
-      gameState.currentPlayer == 1 ? statusField.innerHTML = "The game is finished<br>You won!" : statusField.innerHTML = "The game is finished<br>You lost" ;
-      console.log(ww+" win!");
+      var youWon = gameState.currentPlayer == 1 ? true : false;
+      console.log(youWon);
+      youWon ? statusField.innerHTML = "The game is finished<br>You won!" : statusField.innerHTML = "The game is finished<br>You lost" ;
+
       gameState.yourTurn = false;
+
+      let msg = Messages.O_GAME_OVER;
+      if(gameState.player == 1){
+        msg.data = (youWon ? "A" : "B");
+      }else{
+        msg.data = (youWon ? "B" : "A");
+      }
+      
+      socket.send(JSON.stringify(msg));
+      socket.close();
+
       //document.querySelector(".gameBoard").innerHTML = "";
       //reset();
     }

@@ -100,7 +100,7 @@ h1.menu{
     width:100px;
     margin-top: 5%;
     margin-left: 0.5%;
-    margin-right: 25vw;
+    margin-right: auto;
 
 }
 h2.scoreh2{
@@ -121,7 +121,7 @@ h2.scoreh2{
     width: 5vw;
     height: 5vw;
     margin-bottom: 10px;
-    margin-left: 1.6vw;
+    margin-left: 0.31vw;
     left: 0px;
     position: absolute;
     transition:all .3s;

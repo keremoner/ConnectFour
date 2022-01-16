@@ -12,8 +12,10 @@ var flag = true;
 window.addEventListener('keyup', (e) => {
     switch(e.key){
         case 'ArrowUp':
-            alert("lol");
+            
             document.querySelector(".checker").style.opacity = 0;
+            var disc = new Disc(1);
+            disc.addToScene();
             break;
         case 'ArrowLeft':
           if(!flag){
@@ -37,28 +39,15 @@ window.addEventListener('keyup', (e) => {
                 break;
             }
           }
-        case ' ':
-          if(flag){
-            var player = ((id+1)%2)+1;
-            var disc = new Disc(player);
-            xpos=0;
-            currentCol=0;
-            disc.addToScene();
-            flag= false;
-            break;
-          }
-          break;
         case 'x':
-          if(!flag){
-            var player = ((id)%2)+1; //because when creating disc object we increment id
+            var player = ((id+1)%2)+1; //because when creating disc object we increment id
             dropDisc((id-1),player);
-            flag=true;
             break;
-          }
+        
           break;
     }
    
-});
+  });
 
 
 
@@ -66,6 +55,7 @@ newgame();
 
 function newgame(){
   prepareField();
+  placeDisc(1);
 }
 
 function prepareField(){
@@ -97,7 +87,7 @@ function checkForVictory(row,col){
       }
     }
   }
-  
+
 function getAdj(row,col,row_inc,col_inc){
   if(cellVal(row,col) == cellVal(row+row_inc,col+col_inc)){
     return 1+getAdj(row+row_inc,col+col_inc,row_inc,col_inc);
@@ -130,14 +120,38 @@ function Disc(player){
   this.id = id.toString();
   id++;
   
+
   this.addToScene = function(){
-  document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';
-    /* if(currentPlayer==2){
-      
-    }*/
-  }
+    if(currentPlayer==2){
+      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left='+(5+currentCol*5.69)+'vw'+';"><img src="'+this.src+'"></div>';
+      currentCol = parseInt(window.prompt("Column"));
+      dropDisc($this.id,$this.player);
+    }else{document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';}
   
+    
+  }
   var $this = this;
+  
+
+  document.onmousemove = function(evt){
+    currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/((0.4*document.documentElement.clientWidth)/7));
+    if(currentCol<0){currentCol=0;}
+    if(currentCol>6){currentCol=6;}
+    document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
+  }
+  document.onload = function(evt){
+    if(currentPlayer == 1){
+    currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/60);
+    if(currentCol<0){currentCol=0;}
+    if(currentCol>6){currentCol=6;}
+    document.getElementById('d'+$this.id).style.left = (5+5.69*currentCol)+"vw";
+    }
+  }
+  document.onclick = function(evt){
+    if(currentPlayer == 1){
+      dropDisc($this.id,$this.player);
+    }
+  }
 }
 
 function dropDisc(cid,player){
@@ -149,14 +163,21 @@ function dropDisc(cid,player){
 
 function checkForMoveVictory(){
   if(!checkForVictory(currentRow,currentCol)){
+    placeDisc(3-currentPlayer);
   } else {
-    var ww = currentPlayer == 2 ? 'Player1' : 'Player2';
+    var ww = currentPlayer == 1 ? 'Player1' : 'Player2';
+    placeDisc(3-currentPlayer);
     alert(ww+" win!");
-    document.querySelector(".gameBoard").innerHTML.innerHTML = "";
+    document.querySelector(".gameBoard").innerHTML = "";
     reset();
   }
 }
 
+function placeDisc(player){
+  currentPlayer = player;
+  var disc = new Disc(player);
+  disc.addToScene();
+}
 
 function moveit(who,where){
     document.getElementById('d'+who).style.top = where+'vw';
@@ -169,7 +190,7 @@ function reset(){
   flag=true;
   xpos =0;
   id= 1;
-  newgame();
+  prepareField();
 }
-function sendTheMove(row,col){
+function sendTheMove(col){
 }

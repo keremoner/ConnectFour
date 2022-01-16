@@ -132,13 +132,11 @@ function Disc(player){
   }
   var $this = this;
   
-
   document.onmousemove = function(evt){
     currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/((0.4*document.documentElement.clientWidth)/7));
     if(currentCol<0){currentCol=0;}
     if(currentCol>6){currentCol=6;}
     document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
-  }
   }
   document.onclick = function(evt){
     if(currentPlayer == 1){
@@ -146,7 +144,6 @@ function Disc(player){
     }
   }
 }
-
 function dropDisc(cid,player){
   currentRow = firstFreeRow(currentCol,player);
   moveit(cid,(5.5 +currentRow*5.6));

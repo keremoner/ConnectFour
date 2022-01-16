@@ -1,5 +1,5 @@
 const socket = new WebSocket("ws://localhost:3000");
-const status = document.getElementsByClassName("status");
+const statusField = document.getElementById("status");
 
 // Sets up gameState object
 var gameState = function(){
@@ -24,6 +24,7 @@ socket.onmessage = function (event){
 
   //When the player type is sent.
   if(msg.type == Messages.T_PLAYER_TYPE){
+      statusField.innerHTML = "Waiting for another player...";
       console.log("Waiting for another player.");
       if(msg.data == "A"){
           gameState.player = 1;
@@ -37,8 +38,11 @@ socket.onmessage = function (event){
       console.log("Game started.");
       newgame();
       if(gameState.player == 1){
+        statusField.innerHTML = "The game is on<br>Your turn";
+        //statusField.innerHTML = "The game is on<br>Your turn";
         console.log("Your turn.");
       }else{
+        statusField.innerHTML = "The game is on<br>Opponent's turn";
         console.log("Opponent's turn.");        
       }
 
@@ -46,7 +50,7 @@ socket.onmessage = function (event){
 
   // //When the game is aborted
   // else if(msg.type == Messages.O_GAME_ABORTED.type){
-  //     statusField.textContent = "Game is aborted. Refresh the page if you want to join a new lobby.";
+  //     statusField.innerHTML = "Game is aborted. Refresh the page if you want to join a new lobby.";
   //     nextMoveButton.disabled = true;
   //     nextMoveField.disabled = true;
   // }
@@ -61,6 +65,7 @@ socket.onmessage = function (event){
       document.getElementById('d'+oppDisk.id).style.left = (5.69*gameState.currentCol)+"vw";
       console.log("Karsi hamle geldi, sen " + gameState.player + "sin ve hamle col = " + msg.data);
       gameState.yourTurn = true;
+      statusField.innerHTML = "The game is on<br>Your turn";
 
       dropDisc(oppDisk.id, 3 - gameState.player);
       if(!checkForVictory(gameState.currentRow, gameState.currentCol)){
@@ -158,6 +163,7 @@ function Disc(player){
         socket.send(JSON.stringify(msg));
         dropDisc($this.id,$this.player);
         gameState.yourTurn = false;
+        statusField.innerHTML = "The game is on<br>Opponent's turn";
     }
 }
   //drop function to move the checker image and check if it results in a win condition
@@ -174,6 +180,7 @@ function Disc(player){
 
     if(checkForVictory(gameState.currentRow, gameState.currentCol)){
       var ww = gameState.currentPlayer == 1 ? 'Player1' : 'Player2';
+      gameState.currentPlayer == 1 ? statusField.innerHTML = "The game is finished<br>You won!" : statusField.innerHTML = "The game is finished<br>You lost" ;
       console.log(ww+" win!");
       gameState.yourTurn = false;
       //document.querySelector(".gameBoard").innerHTML = "";

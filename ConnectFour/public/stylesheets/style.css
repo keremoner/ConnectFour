@@ -71,7 +71,6 @@ h1.menu{
 h1.menu:before {
     position: absolute;
     content: attr(data-content); /* Prints the value of the attribute */
-    
     left: 0;
     color: midnightblue;
     overflow: hidden;

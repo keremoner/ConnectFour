@@ -25,7 +25,7 @@ app.get("/play", indexRouter);
 app.get("/", indexRouter);
 app.get('/', function(req, res) {
   //example of data to render; here gameStatus is an object holding this information
-  res.render('splash.ejs', { gamesInitialized: gameStats.gamesInitialized, gamesCompleted: gameStats.gamesCompleted });
+  res.render('splash.ejs', { gamesInitialized: gameStats.gamesInitialized, gamesCompleted: gameStats.gamesCompleted, gamesAborted: gameStats.gamesAborted });
 })
 
 

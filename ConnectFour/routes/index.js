@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const gameStatus = require("../stats");
+const gameStats = require("../stats");
 
 
 // router.get("/", function(req, res) {
@@ -16,7 +16,7 @@ router.get("/play", function(req, res) {
 
 router.get('/', function(req, res) {
   //example of data to render; here gameStatus is an object holding this information
-  res.render('splash.ejs', { gamesInitialized: gameStatus.gamesInitialized, gamesCompleted: gameStatus.gamesCompleted });
+  res.render('splash.ejs', { gamesInitialized: gameStats.gamesInitialized, gamesCompleted: gameStats.gamesCompleted, gamesAborted: gameStats.gamesAborted });
 })
 
 module.exports = router;

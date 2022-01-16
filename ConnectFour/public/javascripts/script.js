@@ -66,8 +66,9 @@ function Disc(player){
     //if the opponent puts a checker it will be first displayed on top of its column
     //for the user it is unnecessary as it is already clicked on top of intended column
     if(currentPlayer==2){
-      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left='+(5+currentCol*5.69)+'vw'+';"><img src="'+this.src+'"></div>';
       currentCol = parseInt(window.prompt("Column"));
+      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker"><img src="'+this.src+'"></div>';
+      document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
       dropDisc($this.id,$this.player);
     }else{document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';}
   
@@ -84,6 +85,9 @@ function Disc(player){
     }
     //fuction for the user to drop the checker to the board
     document.onclick = function(evt){ 
+      if(!yourTurn){
+        placeDisc(2);
+      }
       if(!yourTurn) return;
       if(currentPlayer == 1){
         dropDisc($this.id,$this.player);

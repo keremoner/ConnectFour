@@ -95,7 +95,45 @@ h1.menu{
 
 
 /* Game HTML*/
+.scoreBoard{
+    float: left;
+    width:100px;
+    margin-top: 5%;
+    margin-left: 0.5%;
+    margin-right: 25vw;
 
-.board{
-    background-image: url("C:/Users/Orhan/Desktop/CS/ConnectFour/img/p1.png");
+}
+h2.scoreh2{
+    font-size: 30px;
+}
+.gameBoard{
+    margin-top:10vh;
+    margin-right: auto;
+    margin-left: auto;
+    width: 40vw;
+    height: 40vw;
+    position: relative;
+    
+}
+.checker{
+    top: 0vw;
+    z-index: 0;
+    width: 5vw;
+    height: 5vw;
+    margin-bottom: 10px;
+    margin-left: 1.6vw;
+    left: 0px;
+    position: absolute;
+    transition:all .3s;
+}
+img.board{
+    margin-top: 5vw;
+    z-index: 1;
+    position: absolute;
+}
+img.backoftheboard{
+    margin-top: 5vw;
+    z-index: -1;
+    position: absolute;
+    
 }

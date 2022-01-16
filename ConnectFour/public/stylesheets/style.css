@@ -52,12 +52,12 @@ img{
     max-height: 50vh;
     position: absolute;
     top: 50%;
-    left: 35%;
-    width: auto;
+    left: 27.5%;
+    width: fit-content;
     transform: translateY(-50%);
     animation-name: fadeIn;
     animation-duration: 1s;
-    animation-delay: 9s;
+    animation-delay:0s;
     animation-fill-mode: forwards;
     
 }
@@ -73,9 +73,10 @@ h1{
 h1.menu{
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: auto;
+    font-size: 3.1vw;
     color: white;
     overflow: hidden;
+
 }
 h1.menu:before {
     position: absolute;
@@ -93,6 +94,14 @@ h1.menu::before {
 h1.menu:hover::before {
     width: 100%;
   }
+h1.menu:active{
+    /*background-color: rgb(25, 3, 4);*/
+}
+h1.menu:active::after{
+    content: "Are you kidding me Why would you click the title when the buttons are so obvious";
+    background-color: rgb(34, 43, 224);
+    font-size: medium;
+}
 .menuBut{
     background-color: aliceblue;
     color: black;

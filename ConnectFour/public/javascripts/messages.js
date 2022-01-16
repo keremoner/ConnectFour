@@ -1,6 +1,19 @@
 // @ts-nocheck
 
 (function (exports) {
+
+    exports.O_GAME_START = {
+      type: "GAME-START",
+    };
+    exports.S_GAME_START = JSON.stringify(exports.O_GAME_START);
+
+    exports.T_NEXT_MOVE = "NEXT-MOVE";
+    exports.O_NEXT_MOVE = {
+      type: exports.T_NEXT_MOVE,
+      data: null,
+    };
+    //exports.S_NEXT_MOVE = JSON.stringify(exports.O_NEXT_MOVE);
+
     /*
      * Client to server: game is complete, the winner is ...
      */

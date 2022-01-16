@@ -21,10 +21,11 @@ game.prototype.transitionStates = {
   "0 JOINT": 0, 
   "1 JOINT": 1, 
   "2 JOINT": 2,
-  "CHAR GUESSED": 3,
+  "PLAYING": 3,
   "A": 4, //A won
   "B": 5, //B won
-  "ABORTED": 6
+  "TIE": 6,
+  "ABORTED": 7
 };
 
 /*
@@ -32,13 +33,14 @@ game.prototype.transitionStates = {
  * Valid transitions have a value of 1. Invalid transitions have a value of 0.
  */
 game.prototype.transitionMatrix = [
-  [0, 1, 0, 0, 0, 0, 0], //0 JOINT
-  [1, 0, 1, 0, 0, 0, 0], //1 JOINT
-  [0, 0, 0, 1, 0, 0, 1], //2 JOINT (note: once we have two players, there is no way back!)
-  [0, 0, 0, 1, 1, 1, 1], //CHAR GUESSED
-  [0, 0, 0, 0, 0, 0, 0], //A WON
-  [0, 0, 0, 0, 0, 0, 0], //B WON
-  [0, 0, 0, 0, 0, 0, 0] //ABORTED
+  [0, 1, 0, 0, 0, 0, 0, 0], //0 JOINT
+  [1, 0, 1, 0, 0, 0, 0, 0], //1 JOINT
+  [0, 0, 0, 1, 0, 0, 0, 1], //2 JOINT (note: once we have two players, there is no way back!)
+  [0, 0, 0, 1, 1, 1, 1, 1], //Playing
+  [0, 0, 0, 0, 0, 0, 0, 0], //A WON
+  [0, 0, 0, 0, 0, 0, 0, 0], //B WON
+  [0, 0, 0, 0, 0, 0, 0, 0], //TIE
+  [0, 0, 0, 0, 0, 0, 0, 0] //ABORTED
 ];
 
 /**

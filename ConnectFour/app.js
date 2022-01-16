@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const websocket = require("ws");
+const indexRouter = require("./routes/index");
 const messages = require("./public/javascripts/messages");
 
 const Game = require("./game");
@@ -17,16 +18,20 @@ const port = process.argv[2];
 const app = express();
 
 //Setting the default directory
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+
+app.get("/play", indexRouter);
+app.get("/", indexRouter);
+app.get('/', function(req, res) {
+  //example of data to render; here gameStatus is an object holding this information
+  res.render('splash.ejs', { gamesInitialized: gameStats.gamesInitialized, gamesCompleted: gameStats.gamesCompleted, gamesAborted: gameStats.gamesAborted });
+})
+
 
 //Initializing the server and websocket
 const server = http.createServer(app);
 const wss = new websocket.Server({ server });
-
-//Setting the opening page of the website
-app.get("/", function(req, res){
-  res.sendFile("splash.html", { root: "./public" });
-})
 
 
 const websockets = {};

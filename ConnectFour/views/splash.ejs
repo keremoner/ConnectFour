@@ -27,6 +27,18 @@
     </div>
 
     <div class= "transitor"></div>
+    <h3><%= gamesInitialized %> 
+        <%if (gamesInitialized != 1) { %>
+            games
+        <% } else { %>
+            game
+        <% } %>
+        initialized, 
+        <%= gamesCompleted %> 
+        completed
+        <%= gamesAborted %> 
+        aborted
+    </h3>
     
     <div class="mainMenu" style="opacity: 0;">
         <h1 class="menu" data-content="Welcome to ConnectFour Game" >Welcome to ConnectFour Game</h1>

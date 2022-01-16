@@ -1,4 +1,6 @@
 const socket = new WebSocket("ws://localhost:3000");
+const status = document.getElementsByClassName("status");
+
 // Sets up gameState object
 var gameState = function(){
   this.player = null;

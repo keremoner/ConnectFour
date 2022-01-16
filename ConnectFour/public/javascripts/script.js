@@ -26,7 +26,7 @@ socket.onmessage = function (event){
       if(msg.data == "A"){
           gameState.player = 1;
       }else{
-          gameState.player = -1;
+          gameState.player = 2;
       }
   }
 
@@ -51,8 +51,20 @@ socket.onmessage = function (event){
 
   //When the opponent sends its move
   else if(msg.type == Messages.T_NEXT_MOVE){
+
+      var oppDisk = new Disc(3 - gameState.player);
+
+      oppDisk.addToScene();
       gameState.currentCol = msg.data;
-      console.log(gameState.currentCol);
+      document.getElementById('d'+oppDisk.id).style.left = (5.69*gameState.currentCol)+"vw";
+      console.log("Karsi hamle geldi, sen " + gameState.player + "sin ve hamle col = " + msg.data);
+      gameState.yourTurn = true;
+
+      dropDisc(oppDisk.id, 3 - gameState.player);
+      if(!checkForVictory(gameState.currentRow, gameState.currentCol)){
+        placeDisc(gameState.player);
+      }
+
       //update(-1, msg.data);
       //whoWon(-msg.data);
   }    
@@ -63,10 +75,15 @@ socket.onmessage = function (event){
 //placing the first checker to the table
 function newgame(){
   gameState.id = 1;
-  gameState.yourTurn = true;
   gameState.currentCol = 0;
   prepareField();
-  placeDisc(1);
+  
+  if(gameState.player == 1){
+    gameState.yourTurn = true;
+    placeDisc(1);
+  }else{
+    gameState.yourTurn = false;
+  }
 }
 
 function prepareField(){
@@ -109,7 +126,7 @@ function firstFreeRow(col,player){
 function Disc(player){
   this.player = player;
   this.src = player == 1 ? 'images/p1.png' : 'images/p2.png';
-  console.log(gameState.id);
+  console.log(gameState.id + " diski player" + this.player + " icin olusturuldu");
   this.id = gameState.id.toString();
   gameState.id++;
   
@@ -117,16 +134,8 @@ function Disc(player){
   this.addToScene = function(){
     //if the opponent puts a checker it will be first displayed on top of its column
     //for the user it is unnecessary as it is already clicked on top of intended column
-    if(gameState.currentPlayer==2){
-      gameState.currentCol = parseInt(window.prompt("Column"));
-      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker"><img src="'+this.src+'"></div>';
-      document.getElementById('d'+$this.id).style.left = (5.69*gameState.currentCol)+"vw";
-      dropDisc($this.id,$this.player);
-    }else{
-      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';
-    }
-  
-    
+    document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';
+
   }
   var $this = this;
     //user events for adjusting the checker
@@ -139,38 +148,33 @@ function Disc(player){
     }
     //fuction for the user to drop the checker to the board
     document.onclick = function(evt){ 
-      if(!gameState.yourTurn){
-        placeDisc(2);
-      }
+
       if(!gameState.yourTurn) return;
-      if(gameState.currentPlayer == 1){
+        //Sending the move to the server
+        let msg = Messages.O_NEXT_MOVE;
+        msg.data = gameState.currentCol;
+        socket.send(JSON.stringify(msg));
         dropDisc($this.id,$this.player);
-      }
+        gameState.yourTurn = false;
     }
 }
   //drop function to move the checker image and check if it results in a win condition
   function dropDisc(cid,player){
-    gameState.currentRow = firstFreeRow(gameState.currentCol,player);
-    moveit(cid,(5.5 +gameState.currentRow*5.6));
-    gameState.currentPlayer = player;
-      
-    //Sending the move to the server
-    let msg = Messages.O_NEXT_MOVE;
-    msg.data = gameState.currentCol;
-    socket.send(JSON.stringify(msg));
 
+    gameState.currentRow = firstFreeRow(gameState.currentCol,player);
+    console.log("cid = " + cid);
+    moveit(cid,(5.5 +gameState.currentRow*5.6));
     checkForMoveVictory();
+    gameState.currentPlayer = 3 - gameState.currentPlayer;
   }
   
   function checkForMoveVictory(){
-    if(!checkForVictory(gameState.currentRow,gameState.currentCol)){ //if the player couldn't win
-      gameState.yourTurn = !gameState.yourTurn;                       //enable/disable the user inputs
-      gameState.currentPlayer = 3-gameState.currentPlayer;
-      placeDisc(gameState.currentPlayer);
-    } else {
+
+    if(checkForVictory(gameState.currentRow, gameState.currentCol)){
       var ww = gameState.currentPlayer == 1 ? 'Player1' : 'Player2';
-      alert(ww+" win!");
-      document.querySelector(".gameBoard").innerHTML = "";
+      console.log(ww+" win!");
+      gameState.yourTurn = false;
+      //document.querySelector(".gameBoard").innerHTML = "";
       //reset();
     }
   }
@@ -201,8 +205,6 @@ function placeDisc(player){
   gameState.currentPlayer = player;
   var disc = new Disc(player);
   disc.addToScene();
-
-
 }
 
 //function to move the checker

@@ -57,7 +57,7 @@ img{
     transform: translateY(-50%);
     animation-name: fadeIn;
     animation-duration: 1s;
-    animation-delay:0s;
+    animation-delay:9s;
     animation-fill-mode: forwards;
     
 }
@@ -76,7 +76,6 @@ h1.menu{
     font-size: 3.1vw;
     color: white;
     overflow: hidden;
-
 }
 h1.menu:before {
     position: absolute;
@@ -94,13 +93,18 @@ h1.menu::before {
 h1.menu:hover::before {
     width: 100%;
   }
-h1.menu:active{
-    /*background-color: rgb(25, 3, 4);*/
+.fellas{
+    float: right;
+    font-size: large;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
-h1.menu:active::after{
-    content: "Are you kidding me Why would you click the title when the buttons are so obvious";
-    background-color: rgb(34, 43, 224);
-    font-size: medium;
+.fellas:active{
+    background-color: rgb(179, 236, 34);
+}
+.fellas:active::after{
+    content: "----> Kerem Oner Orhan Agaoglu";
+    font-size: large;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .menuBut{
     background-color: aliceblue;

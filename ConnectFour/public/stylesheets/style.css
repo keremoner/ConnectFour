@@ -23,8 +23,8 @@ img{
     float: left;
     width: 25%;
     padding: 5px;
-    height: 200px;
-    width:  200px;
+    height: 10vw;
+    width:  10vw;
     animation-name: dropDown;
     animation-duration: 2.5s;
     animation-fill-mode: forwards;
@@ -46,12 +46,14 @@ img{
 }
 .mainMenu{
     margin: auto;
+    margin-right: auto;
+    margin-left: auto;
     max-width: 50vw;
     max-height: 50vh;
     position: absolute;
     top: 50%;
-    width: 50%;
-    left: 25%;
+    left: 35%;
+    width: auto;
     transform: translateY(-50%);
     animation-name: fadeIn;
     animation-duration: 1s;
@@ -64,7 +66,25 @@ h1.menu{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: auto;
     color: white;
+    overflow: hidden;
 }
+h1.menu:before {
+    position: absolute;
+    content: attr(data-content); /* Prints the value of the attribute */
+    
+    left: 0;
+    color: midnightblue;
+    overflow: hidden;
+    transition: width 275ms ease;
+  }
+h1.menu::before {
+    /* Same as before */
+    width: 0;
+    white-space: nowrap;
+  }
+h1.menu:hover::before {
+    width: 100%;
+  }
 .menuBut{
     background-color: aliceblue;
     color: black;
@@ -74,7 +94,6 @@ h1.menu{
     width: 25%;
     height: 50px;
     margin-top: 5%;
-
 }
 
 @keyframes dropDown {

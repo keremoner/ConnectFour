@@ -1,29 +1,97 @@
-let moveBy = 5.69;
-let xpos = 0;
-let currentCol = 0;
+const socket = new WebSocket("ws://localhost:3000");
+// Sets up gameState object
+var gameState = function(){
+  this.player = null;
 
-var gameField = new Array();
-var currentRow;
-var currentPlayer;
-var id = 1;
-var yourTurn = true;
+  this.currentCol;
+  this.gameFieldl;
+  this.currentRowl;
+  this.currentPlayer;
+  this.id;
+  this.yourTurn;
+};
+
+socket.onopen = function () {
+  console.log("Connected");
+};
 
 
+socket.onmessage = function (event){
+  let msg = JSON.parse(event.data);
+  console.log(msg.type);
 
-newgame();
+  //When the player type is sent.
+  if(msg.type == Messages.T_PLAYER_TYPE){
+      console.log("Waiting for another player.");
+      if(msg.data == "A"){
+          gameState.player = 1;
+      }else{
+          gameState.player = 2;
+      }
+  }
+
+  //When the game starts
+  else if(msg.type == Messages.O_GAME_START.type){
+      console.log("Game started.");
+      newgame();
+      if(gameState.player == 1){
+        console.log("Your turn.");
+      }else{
+        console.log("Opponent's turn.");        
+      }
+
+  }
+
+  // //When the game is aborted
+  // else if(msg.type == Messages.O_GAME_ABORTED.type){
+  //     statusField.textContent = "Game is aborted. Refresh the page if you want to join a new lobby.";
+  //     nextMoveButton.disabled = true;
+  //     nextMoveField.disabled = true;
+  // }
+
+  //When the opponent sends its move
+  else if(msg.type == Messages.T_NEXT_MOVE){
+
+      var oppDisk = new Disc(3 - gameState.player);
+
+      oppDisk.addToScene();
+      gameState.currentCol = msg.data;
+      document.getElementById('d'+oppDisk.id).style.left = (5.69*gameState.currentCol)+"vw";
+      console.log("Karsi hamle geldi, sen " + gameState.player + "sin ve hamle col = " + msg.data);
+      gameState.yourTurn = true;
+
+      dropDisc(oppDisk.id, 3 - gameState.player);
+      if(!checkForVictory(gameState.currentRow, gameState.currentCol)){
+        placeDisc(gameState.player);
+      }
+
+      //update(-1, msg.data);
+      //whoWon(-msg.data);
+  }    
+}
+
+
 //Initializes the game by creating the gamefield array and
 //placing the first checker to the table
 function newgame(){
+  gameState.id = 1;
+  gameState.currentCol = 0;
   prepareField();
-  placeDisc(1);
+  
+  if(gameState.player == 1){
+    gameState.yourTurn = true;
+    placeDisc(1);
+  }else{
+    gameState.yourTurn = false;
+  }
 }
 
 function prepareField(){
-    gameField = new Array();
+    gameState.gameField = new Array();
     for(var i=0; i<6; i++){
-      gameField[i] = new Array();
+      gameState.gameField[i] = new Array();
       for(var j=0; j<7; j++){
-        gameField[i].push(0);
+        gameState.gameField[i].push(0);
       }
     }
   }
@@ -38,80 +106,76 @@ function getAdj(row,col,row_inc,col_inc){
 }
 //returns the color of the checker
 function cellVal(row,col){
-  if(gameField[row] == undefined || gameField[row][col] == undefined){
+  if(gameState.gameField[row] == undefined || gameState.gameField[row][col] == undefined){
     return -1;
   } else {
-    return gameField[row][col];
+    return gameState.gameField[row][col];
   }
 }
 //returns first available row to drop the checker
 function firstFreeRow(col,player){
   for(var i = 0; i<6; i++){
-    if(gameField[i][col]!=0){
+    if(gameState.gameField[i][col]!=0){
       break;
     }
   }
-  gameField[i-1][col] = player;
+  gameState.gameField[i-1][col] = player;
   return i-1;
 }
 //constructor for the disc object where the image and id is initalized
 function Disc(player){
   this.player = player;
   this.src = player == 1 ? 'images/p1.png' : 'images/p2.png';
-  this.id = id.toString();
-  id++;
+  console.log(gameState.id + " diski player" + this.player + " icin olusturuldu");
+  this.id = gameState.id.toString();
+  gameState.id++;
   
   //Adds the checker image to the board
   this.addToScene = function(){
     //if the opponent puts a checker it will be first displayed on top of its column
     //for the user it is unnecessary as it is already clicked on top of intended column
-    if(currentPlayer==2){
-      currentCol = parseInt(window.prompt("Column"));
-      document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker"><img src="'+this.src+'"></div>';
-      document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
-      dropDisc($this.id,$this.player);
-    }else{document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';}
-  
-    
+    document.querySelector(".gameBoard").innerHTML += '<div id="d'+this.id+'" class="checker" style="left=0px;"><img src="'+this.src+'"></div>';
+
   }
   var $this = this;
     //user events for adjusting the checker
     document.onmousemove = function(evt){ 
-      if(!yourTurn) return;
-      currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/((0.4*document.documentElement.clientWidth)/7));
-      if(currentCol<0){currentCol=0;}
-      if(currentCol>6){currentCol=6;}
-      document.getElementById('d'+$this.id).style.left = (5.69*currentCol)+"vw";
+      if(!gameState.yourTurn) return;
+      gameState.currentCol = Math.floor((evt.clientX - document.querySelector(".gameBoard").offsetLeft)/((0.4*document.documentElement.clientWidth)/7));
+      if(gameState.currentCol<0){gameState.currentCol=0;}
+      if(gameState.currentCol>6){gameState.currentCol=6;}
+      document.getElementById('d'+$this.id).style.left = (5.69*gameState.currentCol)+"vw";
     }
     //fuction for the user to drop the checker to the board
     document.onclick = function(evt){ 
-      if(!yourTurn){
-        placeDisc(2);
-      }
-      if(!yourTurn) return;
-      if(currentPlayer == 1){
+
+      if(!gameState.yourTurn) return;
+        //Sending the move to the server
+        let msg = Messages.O_NEXT_MOVE;
+        msg.data = gameState.currentCol;
+        socket.send(JSON.stringify(msg));
         dropDisc($this.id,$this.player);
-      }
+        gameState.yourTurn = false;
     }
 }
   //drop function to move the checker image and check if it results in a win condition
   function dropDisc(cid,player){
-    currentRow = firstFreeRow(currentCol,player);
-    moveit(cid,(5.5 +currentRow*5.6));
-    currentPlayer = player;
+
+    gameState.currentRow = firstFreeRow(gameState.currentCol,player);
+    console.log("cid = " + cid);
+    moveit(cid,(5.5 +gameState.currentRow*5.6));
     checkForMoveVictory();
+    gameState.currentPlayer = 3 - gameState.currentPlayer;
   }
   
   function checkForMoveVictory(){
-    if(!checkForVictory(currentRow,currentCol)){ //if the player couldn't win
-      yourTurn =!yourTurn;                       //enable/disable the user inputs
-      currentPlayer = 3-currentPlayer;
-      placeDisc(currentPlayer);
-    } else {
-      var ww = currentPlayer == 1 ? 'Player1' : 'Player2';
-      alert(ww+" win!");
-      document.querySelector(".gameBoard").innerHTML = "";
-      reset();
+
+    if(checkForVictory(gameState.currentRow, gameState.currentCol)){
+      var ww = gameState.currentPlayer == 1 ? 'Player1' : 'Player2';
+      console.log(ww+" win!");
+      gameState.yourTurn = false;
+      //document.querySelector(".gameBoard").innerHTML = "";
+      //reset();
     }
   }
 
@@ -138,7 +202,7 @@ function checkForVictory(row,col){
 
 //updates the current player and creates a disc object
 function placeDisc(player){
-  currentPlayer = player;
+  gameState.currentPlayer = player;
   var disc = new Disc(player);
   disc.addToScene();
 }
@@ -156,7 +220,7 @@ function reset(){
   document.querySelector(".gameBoard").innerHTML = '<img src="images/background.png" class="backoftheboard"><img src="images/gameBoard.png" class="board"> ';
   flag=true;
   xpos =0;
-  id= 1;
+  gameState.id= 1;
   prepareField();
 }
 //to send to the server

@@ -52,12 +52,12 @@ img{
     max-height: 50vh;
     position: absolute;
     top: 50%;
-    left: 35%;
-    width: auto;
+    left: 27.5%;
+    width: fit-content;
     transform: translateY(-50%);
     animation-name: fadeIn;
     animation-duration: 1s;
-    animation-delay: 9s;
+    animation-delay:9s;
     animation-fill-mode: forwards;
     
 }
@@ -73,7 +73,7 @@ h1{
 h1.menu{
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: auto;
+    font-size: 3.1vw;
     color: white;
     overflow: hidden;
 }
@@ -93,6 +93,19 @@ h1.menu::before {
 h1.menu:hover::before {
     width: 100%;
   }
+.fellas{
+    float: right;
+    font-size: large;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.fellas:active{
+    background-color: rgb(179, 236, 34);
+}
+.fellas:active::after{
+    content: "----> Kerem Oner Orhan Agaoglu";
+    font-size: large;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
 .menuBut{
     background-color: aliceblue;
     color: black;

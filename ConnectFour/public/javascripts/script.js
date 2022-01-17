@@ -76,6 +76,7 @@ socket.onmessage = function (event){
 //Initializes the game by creating the gamefield array and
 //placing the first checker to the table
 function newgame(){
+  
   gameState.id = 1;
   gameState.currentCol = 0;
   prepareField();
@@ -227,4 +228,8 @@ function reset(){
 }
 //to send to the server
 function sendTheMove(col){
+}
+if(window.matchMedia("(max-width: 500px)").matches){
+  alert("Please use a larger screen to have more fun");
+  documentElement.body.style.backgroundImage = url("p2.png");
 }

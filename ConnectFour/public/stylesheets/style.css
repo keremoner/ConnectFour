@@ -116,7 +116,14 @@ h1.menu:hover::before {
     height: 50px;
     margin-top: 5%;
 }
-
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: 18vw 18vw 18vh;
+    gap: 10px;
+    border-color:white ;
+}
 @keyframes dropDown {
     0%   {margin-top: -350%;}
     100% {transform: rotate(360deg); margin-top: 0%; opacity: 1;}
@@ -139,22 +146,45 @@ h1.menu:hover::before {
     background-image: url("images/splash.jpg");
     background-size: cover;
 }
-.status{
+.gameGrid{
+    display: grid;
+    grid-template-columns: 25vw;
+    z-index: -1;
     float: left;
+    border-radius: 1vh;
+    border-color: aliceblue;
+    background-color: bisque;
+    opacity: 0.7;
+    width: fit-content;
+}
+.status{
     text-align: center;
-    width:25vw;
+    width:fit-content;
     height: 5vh;
     margin-top: 5%;
-    margin-left: 0.5%;
+    margin-left: auto;
     margin-right: auto;
-    z-index:-1;
+    z-index:0;
     font-size: 2vw;
     color: royalblue;
-    background-color: indianred;
+    background-color: rgb(235, 94, 94);
 }
-
-h2.scoreh2{
-    font-size: 30px;
+.status:hover::before{
+    content:" <3";
+}
+.status:hover::after{
+    content:" <3";
+}
+.funfact{
+    font-size: 1vw;
+}
+.funfact:active::after{
+    content: "Nowadays, Connect 4 can be played online. ";
+}
+h2{
+    font-size: 1.5vw;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-decoration: underline;
 }
 .gameBoard{
     margin-top:5vh;

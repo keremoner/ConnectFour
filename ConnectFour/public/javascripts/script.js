@@ -200,7 +200,7 @@ function Disc(player){
       //document.querySelector(".gameBoard").innerHTML = "";
       //reset();
     }
-    if(isLastTurn()){
+    if(gameState.id==43){
       let msg = Messages.O_GAME_OVER;
       statusField.innerHTML = "The game is tie :/";
       socket.send(JSON.stringify(msg));

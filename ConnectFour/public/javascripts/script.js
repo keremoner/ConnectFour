@@ -1,5 +1,6 @@
 const socket = new WebSocket("ws://localhost:3000");
 const statusField = document.getElementById("status");
+const timeField = document.getElementById("time");
 
 // Sets up gameState object
 var gameState = function(){
@@ -7,10 +8,12 @@ var gameState = function(){
 
   this.currentCol;
   this.gameField;
-  this.currentRowl;
+  this.currentRow;
   this.currentPlayer;
   this.id;
   this.yourTurn;
+  this.time;
+  this.gameOn;
 };
 
 socket.onopen = function () {
@@ -52,6 +55,7 @@ socket.onmessage = function (event){
   else if(msg.type == Messages.O_GAME_ABORTED.type){
       statusField.innerHTML = "Game is aborted. Refresh the page if you want to join a new lobby.";
       gameState.yourTurn = false;
+      gameState.gameOn = false;
   }
 
   //When the opponent sends its move
@@ -77,6 +81,25 @@ socket.onmessage = function (event){
   }    
 }
 
+function startTimer() {
+  setInterval(function() {
+      if (!gameState.gameOn) {
+          return;
+      }
+      gameState.time++;
+      updateTimer();
+  }, 1000);
+}
+
+/*
+Updates the time values in the HTML code
+*/
+function updateTimer() {
+let minutes = Math.floor(gameState.time / 60).toString();
+let seconds =  (gameState.time % 60).toString();
+console.log(gameState.time % 60);
+time.innerHTML = "Time passed: " + minutes + " mins " + seconds + " secs"; 
+}
 
 //Initializes the game by creating the gamefield array and
 //placing the first checker to the table
@@ -84,6 +107,8 @@ function newgame(){
   
   gameState.id = 1;
   gameState.currentCol = 0;
+  gameState.time = 0;
+  gameState.gameOn = true;
   prepareField();
   
   if(gameState.player == 1){
@@ -92,6 +117,7 @@ function newgame(){
   }else{
     gameState.yourTurn = false;
   }
+  startTimer();
 }
 
 function prepareField(){
@@ -121,13 +147,13 @@ function cellVal(row,col){
   }
 }
 //returns first available row to drop the checker
-function firstFreeRow(col,player){
+function firstFreeRow(col){
   for(var i = 0; i<6; i++){
     if(gameState.gameField[i][col]!=0){
       break;
     }
   }
-  gameState.gameField[i-1][col] = player;
+
   return i-1;
 }
 //constructor for the disc object where the image and id is initalized
@@ -159,19 +185,23 @@ function Disc(player){
 
       if(!gameState.yourTurn) return;
         //Sending the move to the server
-        let msg = Messages.O_NEXT_MOVE;
-        msg.data = gameState.currentCol;
-        socket.send(JSON.stringify(msg));
-        statusField.innerHTML = "The game is on<br>Opponent's turn";
-        dropDisc($this.id,$this.player);
-        gameState.yourTurn = false;
+        if(firstFreeRow(gameState.currentCol,$this.player) >= 0){
+          let msg = Messages.O_NEXT_MOVE;
+          msg.data = gameState.currentCol;
+          socket.send(JSON.stringify(msg));
+          statusField.innerHTML = "The game is on<br>Opponent's turn";
+          dropDisc($this.id);
+          gameState.yourTurn = false;
+        }
+
 
     }
 }
   //drop function to move the checker image and check if it results in a win condition
   function dropDisc(cid,player){
 
-    gameState.currentRow = firstFreeRow(gameState.currentCol,player);
+    gameState.currentRow = firstFreeRow(gameState.currentCol);
+    gameState.gameField[gameState.currentRow][gameState.currentCol] = player;
     console.log("cid = " + cid);
     moveit(cid,(5.5 +gameState.currentRow*5.6));
     checkForMoveVictory();
@@ -186,6 +216,7 @@ function Disc(player){
       youWon ? statusField.innerHTML = "The game is finished<br>You won!" : statusField.innerHTML = "The game is finished<br>You lost" ;
 
       gameState.yourTurn = false;
+      gameState.gameOn = false;
 
       let msg = Messages.O_GAME_OVER;
       if(gameState.player == 1){
@@ -201,8 +232,9 @@ function Disc(player){
       //reset();
     }
     if(gameState.id==43){
+      statusField.innerHTML = "The game is finished<br>It is a tie.";
       let msg = Messages.O_GAME_OVER;
-      statusField.innerHTML = "The game is tie :/";
+      msg.data = "TIE";
       socket.send(JSON.stringify(msg));
       socket.close();
     }

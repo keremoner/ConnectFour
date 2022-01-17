@@ -72,7 +72,7 @@ socket.onmessage = function (event){
 
       dropDisc(oppDisk.id, 3 - gameState.player);
       checkForMoveVictory();
-      if(!checkForVictory(gameState.currentRow, gameState.currentCol)){
+      if(gameState.gameOn){
         placeDisc(gameState.player);
       }
 
@@ -190,7 +190,7 @@ function Disc(player){
           msg.data = gameState.currentCol;
           socket.send(JSON.stringify(msg));
           statusField.innerHTML = "The game is on<br>Opponent's turn";
-          dropDisc($this.id);
+          dropDisc($this.id, $this.player);
           gameState.yourTurn = false;
         }
 
@@ -233,6 +233,8 @@ function Disc(player){
     }
     if(gameState.id==43){
       statusField.innerHTML = "The game is finished<br>It is a tie.";
+      gameState.yourTurn = false;
+      gameState.gameOn = false;
       let msg = Messages.O_GAME_OVER;
       msg.data = "TIE";
       socket.send(JSON.stringify(msg));

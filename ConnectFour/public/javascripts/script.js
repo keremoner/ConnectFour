@@ -147,13 +147,13 @@ function cellVal(row,col){
   }
 }
 //returns first available row to drop the checker
-function firstFreeRow(col,player){
+function firstFreeRow(col){
   for(var i = 0; i<6; i++){
     if(gameState.gameField[i][col]!=0){
       break;
     }
   }
-  gameState.gameField[i-1][col] = player;
+
   return i-1;
 }
 //constructor for the disc object where the image and id is initalized
@@ -185,19 +185,23 @@ function Disc(player){
 
       if(!gameState.yourTurn) return;
         //Sending the move to the server
-        let msg = Messages.O_NEXT_MOVE;
-        msg.data = gameState.currentCol;
-        socket.send(JSON.stringify(msg));
-        statusField.innerHTML = "The game is on<br>Opponent's turn";
-        dropDisc($this.id,$this.player);
-        gameState.yourTurn = false;
+        if(firstFreeRow(gameState.currentCol,$this.player) >= 0){
+          let msg = Messages.O_NEXT_MOVE;
+          msg.data = gameState.currentCol;
+          socket.send(JSON.stringify(msg));
+          statusField.innerHTML = "The game is on<br>Opponent's turn";
+          dropDisc($this.id);
+          gameState.yourTurn = false;
+        }
+
 
     }
 }
   //drop function to move the checker image and check if it results in a win condition
   function dropDisc(cid,player){
 
-    gameState.currentRow = firstFreeRow(gameState.currentCol,player);
+    gameState.currentRow = firstFreeRow(gameState.currentCol);
+    gameState.gameField[gameState.currentRow][gameState.currentCol] = player;
     console.log("cid = " + cid);
     moveit(cid,(5.5 +gameState.currentRow*5.6));
     checkForMoveVictory();
@@ -228,8 +232,9 @@ function Disc(player){
       //reset();
     }
     if(gameState.id==43){
+      statusField.innerHTML = "The game is finished<br>It is a tie.";
       let msg = Messages.O_GAME_OVER;
-      statusField.innerHTML = "The game is tie :/";
+      msg.data = "TIE";
       socket.send(JSON.stringify(msg));
       socket.close();
     }

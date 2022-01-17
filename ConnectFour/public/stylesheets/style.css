@@ -42,6 +42,7 @@ img{
     animation-name: transition;
     animation-delay: 6s;
     animation-fill-mode: forwards;
+    z-index: 0;
 
 }
 .mainMenu{

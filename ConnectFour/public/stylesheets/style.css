@@ -172,9 +172,6 @@ h1.menu:hover::before {
 .status:hover::before{
     content:" <3";
 }
-.status:hover::after{
-    content:" <3";
-}
 .funfact{
     font-size: 1vw;
 }

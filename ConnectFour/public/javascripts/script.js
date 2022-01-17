@@ -200,6 +200,12 @@ function Disc(player){
       //document.querySelector(".gameBoard").innerHTML = "";
       //reset();
     }
+    if(isLastTurn()){
+      let msg = Messages.O_GAME_OVER;
+      statusField.innerHTML = "The game is tie :/";
+      socket.send(JSON.stringify(msg));
+      socket.close();
+    }
   }
 
 //function to check every possible win condition return false if any of those didn't satisfied
@@ -246,10 +252,15 @@ function reset(){
   gameState.id= 1;
   prepareField();
 }
-//to send to the server
-function sendTheMove(col){
-}
+
 if(window.matchMedia("(max-width: 500px)").matches){
   alert("Please use a larger screen to have more fun");
   documentElement.body.style.backgroundImage = url("p2.png");
+}
+function isLastTurn(){
+  for(var i=0; i<7; i++){
+    if(gameField[0][i] == 0){
+      return false;
+    }else{return true;}
+  }
 }

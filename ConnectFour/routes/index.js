@@ -10,7 +10,7 @@ const gameStats = require("../stats");
 
 /* Pressing the 'PLAY' button, returns this page */
 router.get("/play", function(req, res) {
-  res.sendFile("gameScreen.html", { root: "./public" });
+  res.sendFile("game.html", { root: "./public" });
 });
 
 

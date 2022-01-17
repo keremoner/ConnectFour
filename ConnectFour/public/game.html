@@ -3,22 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheets/style.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    
 </head>
-
-<body>
-    <main>Status: <p id="gameStatus"></p>
-        Your moves: <p id="yourMoves"></p>
-        Opponent moves: <p id="opponentMoves"></p>
-    </main>
-    <button id="nextMove">Next move</button>
-    <input type="text" id="nextMoveField">
+<body style='background-image: url("images/splash.jpg"); background-size: cover;'>
+    <h1>Connect 4</h1>
+    <div class="gameGrid">
+        <h3 class="status" id="status">Waiting for an opponent</h3>
+        <h2> While waiting for your opponent here are some fun facts</h2>
+        <p class="funfact"> The first player of Connect 4 can win every time.<br>
+            The official Connect 4 rack is a 6 row by 7 column rack.<br>
+            There are 42 official Connect 4 playing discs. <br>
+            Connect 4 has roots in Tic-Tac-Toe.<br>
+            There are 4,531,985,219,092 possible positions on a traditional Connect 4 board. <br>
+            Legend says that Captain Cook was one of the first to play Connect 4.<br>
+            The average Connect 4 game takes 1 to 10 minutes to play.<br>
+            For more, click!!<br>
+        </p>
+        <h2 class="time" id="time"></h2>
+    </div>
+    <div class="gameBoard">
+        <img src="images/background.png" class="backoftheboard">
+        <img src="images/gameBoard.png" class="board"> 
+    </div>
     
-    <script src="javascripts/messages.js"></script>
-    <script src="javascripts/main.js"></script>
-
 </body>
-
-
+<script src="javascripts/script.js"></script>
+<script src="javascripts/messages.js"></script>
 </html>

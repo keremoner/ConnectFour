@@ -131,9 +131,8 @@ h1.menu:hover::before {
     margin-right: auto;
     display: grid;
     grid-template-columns: 18vw 18vw 18vh;
-    gap: 10px;
-    border-color:white ;
     font-size: 1.3vw;
+    color: white;
 }
 @keyframes dropDown {
     0%   {margin-top: -350%;}

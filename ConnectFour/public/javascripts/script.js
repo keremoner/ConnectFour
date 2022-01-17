@@ -6,11 +6,13 @@ var gameState = function(){
   this.player = null;
 
   this.currentCol;
-  this.gameFieldl;
-  this.currentRowl;
+  this.gameField;
+  this.currentRow;
   this.currentPlayer;
   this.id;
   this.yourTurn;
+  this.time;
+  this.gameOn;
 };
 
 socket.onopen = function () {
@@ -52,6 +54,7 @@ socket.onmessage = function (event){
   else if(msg.type == Messages.O_GAME_ABORTED.type){
       statusField.innerHTML = "Game is aborted. Refresh the page if you want to join a new lobby.";
       gameState.yourTurn = false;
+      gameState.gameOn = false;
   }
 
   //When the opponent sends its move
@@ -77,6 +80,26 @@ socket.onmessage = function (event){
   }    
 }
 
+function startTimer() {
+  setInterval(function() {
+      if (!gameState.gameOn) {
+          return;
+      }
+      gameState.time++;
+      updateTimer();
+  }, 1000);
+}
+
+/*
+Updates the time values in the HTML code
+*/
+function updateTimer() {
+let minutes = Math.floor(gameState.time / 60).toString();
+let seconds =  (gameState.time % 60).toString();
+console.log(gameState.time % 60);
+//document.getElementById("minutes").innerHTML = minutes;
+//document.getElementById("seconds").innerHTML = seconds;
+}
 
 //Initializes the game by creating the gamefield array and
 //placing the first checker to the table
@@ -84,6 +107,8 @@ function newgame(){
   
   gameState.id = 1;
   gameState.currentCol = 0;
+  gameState.time = 0;
+  gameState.gameOn = true;
   prepareField();
   
   if(gameState.player == 1){
@@ -92,6 +117,7 @@ function newgame(){
   }else{
     gameState.yourTurn = false;
   }
+  startTimer();
 }
 
 function prepareField(){
@@ -186,6 +212,7 @@ function Disc(player){
       youWon ? statusField.innerHTML = "The game is finished<br>You won!" : statusField.innerHTML = "The game is finished<br>You lost" ;
 
       gameState.yourTurn = false;
+      gameState.gameOn = false;
 
       let msg = Messages.O_GAME_OVER;
       if(gameState.player == 1){
@@ -259,7 +286,7 @@ if(window.matchMedia("(max-width: 500px)").matches){
 }
 function isLastTurn(){
   for(var i=0; i<7; i++){
-    if(gameField[0][i] == 0){
+    if(gameState.gameField[0][i] == 0){
       return false;
     }else{return true;}
   }

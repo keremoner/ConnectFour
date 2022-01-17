@@ -176,14 +176,14 @@ h1.menu:hover::before {
     margin-right: auto;
     z-index:0;
     font-size: 2vw;
-    color: royalblue;
+    color: rgb(26, 55, 141);
     background-color: rgb(235, 94, 94);
 }
 .status:hover::before{
     content:" <3";
 }
 .funfact{
-    font-size: 1vw;
+    font-size: 1.1vw;
 }
 .funfact:active::after{
     content: "Nowadays, Connect 4 can be played online. ";

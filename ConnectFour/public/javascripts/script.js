@@ -6,7 +6,7 @@ var gameState = function(){
   this.player = null;
 
   this.currentCol;
-  this.gameFieldl;
+  this.gameField;
   this.currentRowl;
   this.currentPlayer;
   this.id;
@@ -256,11 +256,4 @@ function reset(){
 if(window.matchMedia("(max-width: 500px)").matches){
   alert("Please use a larger screen to have more fun");
   documentElement.body.style.backgroundImage = url("p2.png");
-}
-function isLastTurn(){
-  for(var i=0; i<7; i++){
-    if(gameField[0][i] == 0){
-      return false;
-    }else{return true;}
-  }
 }

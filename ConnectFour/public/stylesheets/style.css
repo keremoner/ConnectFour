@@ -71,7 +71,7 @@ h1{
     color: #00a6d6;
 }
 h1.menu{
-    text-align: center;
+    text-align: left;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 3.1vw;
     color: white;
@@ -95,7 +95,6 @@ h1.menu:hover::before {
   }
 .fellas{
     float: right;
-    font-size: large;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .fellas:active{
@@ -107,14 +106,24 @@ h1.menu:hover::before {
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .menuBut{
-    background-color: aliceblue;
+    background-color: azure;
+    border-color: red;
+    border-radius: 2vw;
     color: black;
     text-align: center;
-    display: inline-block;
-    margin-left: 5%;
-    width: 25%;
-    height: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10vw;
+    height: 5vw;
+    left: 30%;
     margin-top: 5%;
+}
+.menuBut:hover{
+    background-color: gold;
+    width:13vw;
+    height:6vw;
+    font-size: larger;
 }
 .container{
     margin-left: auto;
@@ -123,6 +132,7 @@ h1.menu:hover::before {
     grid-template-columns: 18vw 18vw 18vh;
     gap: 10px;
     border-color:white ;
+    font-size: 1.3vw;
 }
 @keyframes dropDown {
     0%   {margin-top: -350%;}
@@ -160,7 +170,7 @@ h1.menu:hover::before {
 .status{
     text-align: center;
     width:fit-content;
-    height: 5vh;
+    height: fit-content;
     margin-top: 5%;
     margin-left: auto;
     margin-right: auto;

@@ -94,18 +94,11 @@ wss.on("connection", function(ws){
   console.log(oMsg.type + " " + gameObj.gameState);
 
     if (isPlayerA) {
-      /*
-       * player A cannot do a lot, just send the target word;
-       * if player B is already available, send message to B
-       */
+
       if (oMsg.type == messages.T_NEXT_MOVE) {
         gameObj.playerB.send(message.toString());
       }
     } else {
-      /*
-       * player B can make a guess;
-       * this guess is forwarded to A
-       */
       if (oMsg.type == messages.T_NEXT_MOVE) {
         gameObj.playerA.send(message.toString());
       }
@@ -113,16 +106,9 @@ wss.on("connection", function(ws){
     gameObj.setStatus("PLAYING");
   });
   con.on("close", function(code) {
-    /*
-     * code 1001 means almost always closing initiated by the client;
-     * source: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-     */
     console.log(`${con["id"]} disconnected ...`);
 
     if (code == 1001) {
-      /*
-       * if possible, abort the game; if not, the game is already completed
-       */
       const gameObj = websockets[con["id"]];
       if(gameObj.gameState == "1 JOINT"){
         gameObj.setStatus("0 JOINT");
@@ -132,10 +118,6 @@ wss.on("connection", function(ws){
           gameObj.setStatus("ABORTED");
           gameStats.gamesAborted++;
   
-          /*
-           * determine whose connection remains open;
-           * close it
-           */
           try {
             gameObj.playerA.send(messages.S_GAME_ABORTED);
             gameObj.playerA.close();
@@ -161,15 +143,3 @@ wss.on("connection", function(ws){
 });
 
 server.listen(port);
-
-// let htmlPrefix = "<!DOCTYPE html><html><head></head><body><h1>";
-// let htmlSuffix = "</h1></body></html>";
-
-// app.get("/goodbye", function (req, res) {
-//   res.send(htmlPrefix + "Goodbye to you too!" + htmlSuffix);
-// });
-
-// app.get("/*", function (req, res) {
-//   res.send("Not a valid route ...");
-// });
-

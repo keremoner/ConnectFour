@@ -1,5 +1,6 @@
 const socket = new WebSocket("ws://localhost:3000");
 const statusField = document.getElementById("status");
+const timeField = document.getElementById("time");
 
 // Sets up gameState object
 var gameState = function(){
@@ -97,8 +98,7 @@ function updateTimer() {
 let minutes = Math.floor(gameState.time / 60).toString();
 let seconds =  (gameState.time % 60).toString();
 console.log(gameState.time % 60);
-//document.getElementById("minutes").innerHTML = minutes;
-//document.getElementById("seconds").innerHTML = seconds;
+time.innerHTML = "Time passed: " + minutes + " mins " + seconds + " secs"; 
 }
 
 //Initializes the game by creating the gamefield array and
